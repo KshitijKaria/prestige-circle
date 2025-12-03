@@ -5,10 +5,11 @@ const router = express.Router();
 // Node 18+ has global fetch. For Node <=17, uncomment:
 // const fetch = (...args) => import("node-fetch").then(({ default: f }) => f(...args));
 
-/** === IMPORTANT: point the AI service to your real backend base ===
- * If you move environments, just set process.env.API_BASE instead.
+/** === DEPLOYED BASE URL ===
+ * You can override this in the environment with API_BASE.
  */
-const API_BASE = process.env.API_BASE || "https://backend-production-09c4.up.railway.app";
+const API_BASE =
+  process.env.API_BASE || "https://backend-production-09c4.up.railway.app";
 
 const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 const GEMINI_KEY = process.env.GEMINI_API_KEY;
@@ -18,9 +19,9 @@ const ELEVEN_VOICE = process.env.ELEVENLABS_VOICE_ID || "21m00Tcm4TlvDq8ikWAM";
 const ELEVEN_MODEL = process.env.ELEVENLABS_MODEL || "eleven_multilingual_v2";
 
 // === Session / snapshot ===
-const SESS_TTL_MS = 5 * 60 * 1000;             // refresh data snapshot every 5 minutes
-const MAX_HISTORY_PAIRS = 6;                   // replay last N Q/A pairs
-const AI_CTX_LIMIT = parseInt(process.env.AI_CTX_LIMIT || "200", 10); // list cap for data block
+const SESS_TTL_MS = 5 * 60 * 1000;  // refresh snapshot every 5 minutes
+const MAX_HISTORY_PAIRS = 6;         // keep last N Q/A pairs
+const AI_CTX_LIMIT = parseInt(process.env.AI_CTX_LIMIT || "200", 10); // cap lists
 
 // userId -> { bootstrapped, lastBootstrap, history[], me, events[], txns[], dataBlock }
 const sessions = new Map();
@@ -133,15 +134,18 @@ function formatEventsList(events) {
 async function synthesizeReply(text) {
   if (!ELEVEN_KEY || !text) return null;
   try {
-    const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(ELEVEN_VOICE)}`, {
-      method: "POST",
-      headers: {
-        "xi-api-key": ELEVEN_KEY,
-        "Content-Type": "application/json",
-        Accept: "audio/mpeg",
-      },
-      body: JSON.stringify({ text, model_id: ELEVEN_MODEL }),
-    });
+    const resp = await fetch(
+      `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(ELEVEN_VOICE)}`,
+      {
+        method: "POST",
+        headers: {
+          "xi-api-key": ELEVEN_KEY,
+          "Content-Type": "application/json",
+          Accept: "audio/mpeg",
+        },
+        body: JSON.stringify({ text, model_id: ELEVEN_MODEL }),
+      }
+    );
     if (!resp.ok) return null;
     const buffer = Buffer.from(await resp.arrayBuffer());
     return buffer.toString("base64");
@@ -152,12 +156,15 @@ async function synthesizeReply(text) {
 }
 
 // ----------------------------
-// Data fetchers (use absolute API_BASE)
+// Data fetchers (absolute API_BASE)
 // ----------------------------
 async function fetchMe(req) {
   try {
     const resp = await fetch(`${API_BASE}/users/me`, {
-      headers: { "Content-Type": "application/json", Authorization: req.headers.authorization || "" }
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: req.headers.authorization || "",
+      },
     });
     if (!resp.ok) return null;
     return resp.json();
@@ -182,6 +189,7 @@ function normalizeEvent(ev, me) {
     ev.numGuests ??
     (Array.isArray(guests) ? guests.length : undefined);
 
+  // Heuristic: am I RSVP'd?
   const meRsvped =
     !!(ev.meRsvped ?? ev.rsvped ?? ev.isRsvped ?? ev.registered) ||
     guests.some(g => isMe(g?.id ?? g?.userId ?? g?.utorid ?? g?.email, me));
@@ -226,17 +234,22 @@ async function fetchAllEvents(req, me) {
     });
 
     const resp = await fetch(`${API_BASE}/events?${params.toString()}`, {
-      headers: { "Content-Type": "application/json", Authorization: req.headers.authorization || "" }
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: req.headers.authorization || "",
+      },
     });
     if (!resp.ok) break;
 
     const data = await resp.json();
-    const items = data.items || data.results || data.events || (Array.isArray(data) ? data : []);
+    const items =
+      data.items || data.results || data.events || (Array.isArray(data) ? data : []);
     if (!items.length) break;
 
     for (const raw of items) out.push(normalizeEvent(raw, me));
 
-    const totalPages = data.totalPages || Math.ceil((data.total ?? data.count ?? out.length) / limit) || 1;
+    const totalPages =
+      data.totalPages || Math.ceil((data.total ?? data.count ?? out.length) / limit) || 1;
     if (page >= totalPages) break;
     page += 1;
   }
@@ -246,11 +259,18 @@ async function fetchAllEvents(req, me) {
 async function fetchTransactions(req) {
   try {
     const resp = await fetch(`${API_BASE}/transactions?page=1&limit=200`, {
-      headers: { "Content-Type": "application/json", Authorization: req.headers.authorization || "" }
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: req.headers.authorization || "",
+      },
     });
-    if (!resp.ok) return [];
+    if (!resp.ok) {
+      // Common in production if regular users can’t read audit logs
+      return [];
+    }
     const data = await resp.json();
-    const items = data.items || data.results || data.transactions || (Array.isArray(data) ? data : []);
+    const items =
+      data.items || data.results || data.transactions || (Array.isArray(data) ? data : []);
     return items.map(t => ({
       id: t.id ?? t._id ?? t.uuid,
       points: t.points ?? t.amount ?? 0,
@@ -344,6 +364,7 @@ function buildDataBlock({ me, events, txns }) {
     })),
   };
 
+  // Keep as plain text so Gemini can skim + reason
   return "DATA_SNAPSHOT:\n" + JSON.stringify(payload, null, 2);
 }
 
@@ -362,7 +383,12 @@ async function bootstrapSession(req, userId) {
 // ----------------------------
 router.get("/ping", (req, res) => {
   const me = req.auth || null; // express-jwt v8 (if present)
-  return res.json({ ok: true, model: GEMINI_MODEL, role: me?.role ?? null, apiBase: API_BASE });
+  return res.json({
+    ok: true,
+    model: GEMINI_MODEL,
+    role: me?.role ?? null,
+    apiBase: API_BASE,
+  });
 });
 
 router.post("/chat", async (req, res) => {
@@ -461,9 +487,7 @@ router.post("/chat", async (req, res) => {
 
     // ---- General Q/A with full data block up front + short history ----
     const contents = [];
-    if (sess.dataBlock) {
-      contents.push({ role: "user", parts: [{ text: sess.dataBlock }] });
-    }
+    if (sess.dataBlock) contents.push({ role: "user", parts: [{ text: sess.dataBlock }] });
     if (Array.isArray(sess.history) && sess.history.length) contents.push(...sess.history);
     contents.push({ role: "user", parts: [{ text: userMessage }] });
 
