@@ -3,18 +3,25 @@ import React, { createContext, useState, useContext, useEffect } from "react";
 const AuthContext = createContext(null);
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
+// Use sessionStorage so auth is per-tab, not shared across tabs
+const STORAGE = typeof window !== "undefined" ? window.sessionStorage : null;
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("token"));
-  const [currentInterface, setCurrentInterface] = useState(
-    localStorage.getItem("currentInterface") || "regular"
+  const [token, setToken] = useState(() =>
+    STORAGE ? STORAGE.getItem("token") : null
+  );
+  const [currentInterface, setCurrentInterface] = useState(() =>
+    STORAGE?.getItem("currentInterface") || "regular"
   );
   const [availableInterfaces, setAvailableInterfaces] = useState(["regular"]);
 
   useEffect(() => {
     const initializeAuthentication = async () => {
-      const storedToken = localStorage.getItem("token");
-      const expiresAt = localStorage.getItem("tokenExpiresAt");
+      if (!STORAGE) return;
+
+      const storedToken = STORAGE.getItem("token");
+      const expiresAt = STORAGE.getItem("tokenExpiresAt");
 
       if (storedToken && expiresAt) {
         const now = new Date();
@@ -36,12 +43,12 @@ export const AuthProvider = ({ children }) => {
               const interfaces = determineAvailableInterfaces(userData);
               setAvailableInterfaces(interfaces);
 
-              const storedInterface = localStorage.getItem("currentInterface");
+              const storedInterface = STORAGE.getItem("currentInterface");
               if (storedInterface && interfaces.includes(storedInterface)) {
                 setCurrentInterface(storedInterface);
               } else {
                 setCurrentInterface("regular");
-                localStorage.setItem("currentInterface", "regular");
+                STORAGE.setItem("currentInterface", "regular");
               }
             } else {
               logout();
@@ -94,8 +101,10 @@ export const AuthProvider = ({ children }) => {
 
       const { token: newToken, expiresAt } = data;
 
-      localStorage.setItem("token", newToken);
-      localStorage.setItem("tokenExpiresAt", expiresAt);
+      if (STORAGE) {
+        STORAGE.setItem("token", newToken);
+        STORAGE.setItem("tokenExpiresAt", expiresAt);
+      }
       setToken(newToken);
 
       const userResponse = await fetch(`${API_BASE_URL}/users/me`, {
@@ -113,7 +122,9 @@ export const AuthProvider = ({ children }) => {
         setAvailableInterfaces(interfaces);
         const chosen = interfaces[interfaces.length - 1];
         setCurrentInterface(chosen);
-        localStorage.setItem("currentInterface", chosen);
+        if (STORAGE) {
+          STORAGE.setItem("currentInterface", chosen);
+        }
       }
 
       return { success: true };
@@ -126,9 +137,17 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    if (STORAGE) {
+      STORAGE.removeItem("token");
+      STORAGE.removeItem("tokenExpiresAt");
+      STORAGE.removeItem("currentInterface");
+    }
+
+    // Optional: if you previously used localStorage, clear those too:
     localStorage.removeItem("token");
     localStorage.removeItem("tokenExpiresAt");
     localStorage.removeItem("currentInterface");
+
     setToken(null);
     setUser(null);
     setCurrentInterface("regular");
@@ -138,7 +157,9 @@ export const AuthProvider = ({ children }) => {
   const switchInterface = (interfaceName) => {
     if (availableInterfaces.includes(interfaceName)) {
       setCurrentInterface(interfaceName);
-      localStorage.setItem("currentInterface", interfaceName);
+      if (STORAGE) {
+        STORAGE.setItem("currentInterface", interfaceName);
+      }
       return true;
     }
     return false;
@@ -154,7 +175,7 @@ export const AuthProvider = ({ children }) => {
     return requiredRoles.includes(user.role);
   };
 
-  // 🔁 NEW: refresh current user from backend (e.g. after adjustments)
+  // 🔁 refresh current user from backend (e.g. after adjustments)
   const refreshUser = async () => {
     if (!token) return;
     try {
@@ -176,11 +197,11 @@ export const AuthProvider = ({ children }) => {
 
       setCurrentInterface((curr) => {
         if (interfaces.includes(curr)) {
-          localStorage.setItem("currentInterface", curr);
+          if (STORAGE) STORAGE.setItem("currentInterface", curr);
           return curr;
         }
         const fallback = interfaces[interfaces.length - 1] || "regular";
-        localStorage.setItem("currentInterface", fallback);
+        if (STORAGE) STORAGE.setItem("currentInterface", fallback);
         return fallback;
       });
     } catch (err) {
@@ -190,7 +211,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user,
-    setUser, // keep this if other components rely on it
+    setUser,
     token,
     login,
     logout,
@@ -199,7 +220,7 @@ export const AuthProvider = ({ children }) => {
     currentInterface,
     availableInterfaces,
     switchInterface,
-    refreshUser, // 👈 expose refreshUser in context
+    refreshUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
