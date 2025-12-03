@@ -11,6 +11,13 @@ export default function ChatAssistant() {
   const [busy, setBusy] = React.useState(false);
   const [listening, setListening] = React.useState(false);
   const [speechSupported, setSpeechSupported] = React.useState(false);
+  const [speechLang, setSpeechLang] = React.useState(() => {
+    try {
+      return localStorage.getItem("assistantLang") || "en-US";
+    } catch {
+      return "en-US";
+    }
+  });
   const [voiceEnabled, setVoiceEnabled] = React.useState(() => {
     try {
       return JSON.parse(localStorage.getItem("assistantVoice") ?? "true");
@@ -59,7 +66,7 @@ export default function ChatAssistant() {
     const rec = new Speech();
     rec.continuous = false;
     rec.interimResults = false;
-    rec.lang = "en-US";
+    rec.lang = speechLang;
     rec.onresult = (event) => {
       const transcript = event.results?.[0]?.[0]?.transcript || "";
       if (transcript) {
@@ -71,7 +78,7 @@ export default function ChatAssistant() {
     recognitionRef.current = rec;
     setSpeechSupported(true);
     return () => rec.abort();
-  }, []);
+  }, [speechLang]);
 
   async function send() {
     const text = input.trim();
@@ -120,6 +127,7 @@ export default function ChatAssistant() {
   function startVoice() {
     if (!recognitionRef.current || busy) return;
     try {
+      recognitionRef.current.lang = speechLang;
       setListening(true);
       recognitionRef.current.start();
     } catch {
@@ -272,9 +280,40 @@ export default function ChatAssistant() {
                 <FaMicrophone style={{ opacity: listening ? 1 : 0.85 }} />
               </button>
             </div>
-            <button className="pc-btn" onClick={send} disabled={busy || !input.trim()}>
-              {busy ? "Sending…" : "Send"}
-            </button>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
+              {speechSupported && (
+                <select
+                  aria-label="Speech input language"
+                  value={speechLang}
+                  onChange={(e) => {
+                    const lang = e.target.value;
+                    setSpeechLang(lang);
+                    try {
+                      localStorage.setItem("assistantLang", lang);
+                    } catch {}
+                  }}
+                  style={{
+                    background: "transparent",
+                    color: "#e5edff",
+                    border: "1px solid rgba(255,255,255,0.2)",
+                    borderRadius: 8,
+                    padding: "6px 8px",
+                    cursor: "pointer",
+                    flex: "0 0 auto",
+                  }}
+                >
+                  <option value="en-US">English (US)</option>
+                  <option value="en-GB">English (UK)</option>
+                  <option value="hi-IN">Hindi</option>
+                  <option value="fr-FR">French</option>
+                  <option value="es-ES">Spanish</option>
+                  <option value="zh-CN">Chinese (Mandarin)</option>
+                </select>
+              )}
+              <button className="pc-btn" onClick={send} disabled={busy || !input.trim()}>
+                {busy ? "Sending…" : "Send"}
+              </button>
+            </div>
           </div>
         </div>
       )}
