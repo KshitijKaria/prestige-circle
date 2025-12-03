@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+v#!/usr/bin/env node
 'use strict';
 
 const express = require("express");
@@ -40,7 +40,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Internal server error" });
 });
 
-const port = process.argv[2] || 3000;
+const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
