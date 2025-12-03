@@ -1,0 +1,254 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: #142135;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.user-info {
+  margin-bottom: 24px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #334155;
+}
+
+.info-row label {
+  font-weight: 600;
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.info-row span {
+  color: white;
+  font-size: 14px;
+}
+
+.utorid-badge {
+  background: #667eea;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: "Courier New", monospace;
+  font-weight: 600;
+}
+
+.role-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.role-regular {
+  background: #10b981;
+  color: white;
+}
+
+.role-cashier {
+  background: #f59e0b;
+  color: white;
+}
+
+.role-manager {
+  background: #8b5cf6;
+  color: white;
+}
+
+.role-superuser {
+  background: #ef4444;
+  color: white;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status-badge.verified {
+  background: #10b981;
+  color: white;
+}
+
+.status-badge.unverified {
+  background: #ef4444;
+  color: white;
+}
+
+.status-badge.suspicious {
+  background: #f59e0b;
+  color: white;
+}
+
+.status-badge.not-suspicious {
+  background: #10b981;
+  color: white;
+}
+
+.management-actions {
+  border-top: 1px solid #334155;
+  padding-top: 20px;
+}
+
+.management-actions h3 {
+  color: white;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.action-section {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #0f172a;
+  border-radius: 8px;
+  border: 1px solid #334155;
+}
+
+.action-section h4 {
+  margin: 0 0 12px 0;
+  color: #e2e8f0;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.suspicious-btn {
+  background: #f59e0b;
+  color: white;
+}
+
+.not-suspicious-btn {
+  background: #10b981;
+  color: white;
+}
+
+.role-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.role-selection label {
+  font-weight: 600;
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.role-select-modal {
+  padding: 8px 12px;
+  border: 2px solid #475569;
+  border-radius: 6px;
+  background: #1e293b;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.no-permission {
+  text-align: center;
+  color: #94a3b8;
+  padding: 20px;
+  background: #0f172a;
+  border-radius: 8px;
+  border: 1px solid #334155;
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #334155;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.error-message {
+  background: #dc2626;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  border: 1px solid #ef4444;
+}

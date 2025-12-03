@@ -1,0 +1,241 @@
+.layout-container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  background: linear-gradient(180deg, #111827, #0d1b2a);
+  padding: 20px;
+  color: white;
+  transition: width 0.3s ease;
+  overflow: hidden;
+}
+
+.sidebar.hide {
+  width: 100px;
+}
+
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  padding: 12px 10px;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.sidebar.hide nav a span {
+  display: none;
+}
+
+.sidebar.hide nav a {
+  justify-content: center;
+}
+
+.sidebar nav a:hover {
+  color: #0062ff;
+  border-radius: 8px;
+}
+
+.toggle-btn {
+  background: none;
+  color: white;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.main-content {
+  flex: 1;
+  padding-left: 20px;
+  padding-bottom: 20px;
+  padding-right: 20px;
+  background: #0b1320;
+  overflow-y: auto;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #0b1320;
+  padding: 10px;
+}
+
+.top-right-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* logout button */
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 1px solid #64748b;
+  color: white;
+  padding: 6px 12px;
+  margin-right: 40px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logout-btn:hover {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+@media (max-width: 800px) {
+  .logout-btn span {
+    display: none;
+  }
+}
+
+.prestige-logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  letter-spacing: 1px;
+  margin-left: 35px;
+}
+
+.prestige-logo span {
+  background: linear-gradient(90deg, #0062ff, #abe6ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+nav a,
+nav a svg {
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+nav a:hover svg {
+  color: #0062ff;
+}
+
+nav a:hover svg {
+  color: #0062ff;
+}
+
+.profile-icon svg {
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.profile-icon:hover svg {
+  color: #0062ff;
+}
+
+.active-link {
+  position: relative;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding-left: 15px;
+}
+
+.active-link::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  height: 60%;
+  width: 4px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #0062ff, #abe6ff);
+}
+
+.interface-switcher {
+  margin-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 15px;
+}
+
+.interface-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 10px;
+  cursor: pointer;
+  border-radius: 8px;
+  border-left: 4px solid transparent;
+  transition: all 0.2s ease;
+  color: white;
+  font-size: 14px;
+}
+
+.interface-selector:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.interface-selector .chevron {
+  margin-left: auto;
+  font-size: 12px;
+  transition: transform 0.2s ease;
+}
+
+.interface-selector .chevron.rotated {
+  transform: rotate(180deg);
+}
+
+.interface-dropdown {
+  margin-top: 5px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.interface-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+  transition: all 0.2s ease;
+  color: #e2e8f0;
+  font-size: 13px;
+}
+
+.interface-option:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.interface-option.active {
+  background: rgba(255, 255, 255, 0.1);
+  font-weight: 600;
+}
+
+.check-mark {
+  color: #10b981;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.sidebar.hide .interface-selector span:not(:first-child),
+.sidebar.hide .interface-option span:not(:last-child) {
+  display: none;
+}
+
+.sidebar.hide .interface-selector {
+  justify-content: center;
+}

@@ -1,0 +1,3 @@
+- circular progress bar, npm install react-circular-progressbar - Saood
+- unique qrcode for users, npm install qrcode.react - Saood
+- seeding for the pre populated database transactions and repetitive model creations
