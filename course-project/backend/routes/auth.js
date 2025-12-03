@@ -10,7 +10,7 @@ const issueToken = (user) => {
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
   const token = jwt.sign(
     { id: user.id, role: user.role },
-    process.env.JWT_SECRET || "secretkey@0987654321",
+    process.env.JWT_SECRET,
     { expiresIn: "7d" }
   );
   return { token, expiresAt };
