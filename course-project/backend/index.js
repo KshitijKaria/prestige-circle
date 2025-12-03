@@ -15,8 +15,13 @@ const transactionsRoutes = require("./routes/transactions");
 const promotionsRoutes = require("./routes/promotions");
 const aiRoutes = require("./routes/ai");
 
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3001";
+
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: FRONTEND_URL,
+    credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
