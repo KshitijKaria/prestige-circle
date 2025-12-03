@@ -65,7 +65,7 @@ function LandingPage() {
           : [];
 
         const upcomingUserEvents = allEvents.filter(
-          (e) => new Date(e.startTime) > new Date() && e.meRsvped === true
+          (e) => new Date(e.endTime) > new Date() && e.meRsvped === true
         );
 
         setUpcomingEvents(upcomingUserEvents);
