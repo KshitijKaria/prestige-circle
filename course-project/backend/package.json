@@ -3,12 +3,14 @@
   "version": "0.0.1",
   "description": "CSSU Reward System",
   "main": "index.js",
+  "engines": { "node": ">=18" },
   "scripts": {
     "createsuperuser": "node prisma/createsu.js",
     "clean": "rm -rf prisma/dev.db* node_modules package-lock.json prisma/migrations/",
     "start": "node index.js",
     "seed": "node prisma/seed.js",
-    "postinstall": "npx prisma migrate deploy && npm run seed"
+    "migrate:deploy": "prisma migrate deploy",
+    "postinstall": "prisma generate"
   },
   "author": "CSC309 Student, Winter 2025",
   "license": "ISC",
