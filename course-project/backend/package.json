@@ -6,11 +6,10 @@
   "engines": { "node": ">=18" },
   "scripts": {
     "createsuperuser": "node prisma/createsu.js",
+    "seed": "node prisma/seed.js",
     "clean": "rm -rf prisma/dev.db* node_modules package-lock.json prisma/migrations/",
     "start": "node index.js",
-    "seed": "node prisma/seed.js",
-    "migrate:deploy": "prisma migrate deploy",
-    "postinstall": "prisma generate"
+    "postinstall": "npx prisma migrate deploy && npm run seed"
   },
   "author": "CSC309 Student, Winter 2025",
   "license": "ISC",
