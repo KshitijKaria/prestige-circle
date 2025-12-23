@@ -7,6 +7,7 @@
   "scripts": {
     "createsuperuser": "node prisma/createsu.js",
     "seed": "node prisma/seed.js",
+    "seed:prod": "node prisma/seed.js",
     "clean": "rm -rf prisma/dev.db* node_modules package-lock.json prisma/migrations/",
     "start": "node server.js",
     "dev": "node server.js",
@@ -14,7 +15,7 @@
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:migrate:deploy": "prisma migrate deploy",
     "test": "node --test",
-    "postinstall": "npx prisma migrate deploy && npm run seed"
+    "postinstall": "npx prisma migrate deploy"
   },
   "author": "CSC309 Student, Winter 2025",
   "license": "ISC",
