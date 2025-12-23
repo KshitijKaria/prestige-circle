@@ -10,6 +10,9 @@
     "clean": "rm -rf prisma/dev.db* node_modules package-lock.json prisma/migrations/",
     "start": "node server.js",
     "dev": "node server.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate:dev": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy",
     "test": "node --test",
     "postinstall": "npx prisma migrate deploy && npm run seed"
   },

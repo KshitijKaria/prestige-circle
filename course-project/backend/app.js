@@ -33,6 +33,16 @@ app.use("/transactions", authGuard, transactionsRoutes);
 app.use("/promotions", authGuard, promotionsRoutes);
 app.use("/ai", authGuard, aiRoutes);
 
+// Local dev: support /api/* so CRA can proxy without path rewrites.
+if (process.env.NODE_ENV !== "production") {
+  app.use("/api/auth", authRoutes);
+  app.use("/api/users", authGuard, userRoutes);
+  app.use("/api/events", authGuard, eventsRoutes);
+  app.use("/api/transactions", authGuard, transactionsRoutes);
+  app.use("/api/promotions", authGuard, promotionsRoutes);
+  app.use("/api/ai", authGuard, aiRoutes);
+}
+
 app.use((err, req, res, next) => {
   if (err.name === "UnauthorizedError") {
     return res.status(401).json({ error: "Unauthorized" });
