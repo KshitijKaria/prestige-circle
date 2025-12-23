@@ -2,7 +2,7 @@
 
 // Vercel env var:
 // REACT_APP_API_BASE_URL=https://<backend>.vercel.app
-const rawBase = process.env.REACT_APP_API_BASE_URL || "";
+const rawBase = process.env.REACT_APP_API_BASE_URL || "http://localhost:3000";
 const API_BASE_URL = rawBase.replace(/\/+$/, "");
 
 const normalizePath = (path = "") => {
@@ -14,4 +14,5 @@ const normalizePath = (path = "") => {
 };
 
 export const apiUrl = (path = "") => `${API_BASE_URL}${normalizePath(path)}`;
+console.log(API_BASE_URL);
 export { API_BASE_URL };
