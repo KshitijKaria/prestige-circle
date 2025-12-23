@@ -4,6 +4,7 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { apiUrl } from "../config/apiBase";
 import {
   FaGift,
   FaExchangeAlt,
@@ -12,8 +13,6 @@ import {
   FaHistory,
 } from "react-icons/fa";
 import QRCodeBox from "./QRCode";
-
-const API = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 function LandingPage() {
   const { currentInterface, user: authUser, token } = useAuth();
@@ -29,7 +28,7 @@ function LandingPage() {
 
       try {
         // --- current user ---
-        const currUser = await fetch(`${API}/users/me`, {
+        const currUser = await fetch(apiUrl("/users/me"), {
           headers: { Authorization: `Bearer ${token}` },
         });
         const userData = await currUser.json();
@@ -40,7 +39,7 @@ function LandingPage() {
 
         // --- recent transactions (limit 5) ---
         const userTransactions = await fetch(
-          `${API}/users/me/transactions?limit=5&page=1`,
+          apiUrl("/users/me/transactions?limit=5&page=1"),
           { headers: { Authorization: `Bearer ${token}` } }
         );
         const txData = await userTransactions.json();
@@ -53,7 +52,7 @@ function LandingPage() {
 
         // --- upcoming events the user is RSVPed to ---
         const eventsRes = await fetch(
-          `${API}/events?limit=50&page=1&includeMe=true`,
+          apiUrl("/events?limit=50&page=1&includeMe=true"),
           {
             headers: { Authorization: `Bearer ${token}` },
           }

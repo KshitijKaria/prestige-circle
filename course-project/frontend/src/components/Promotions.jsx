@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Link } from "react-router-dom";
+import { apiUrl } from "../config/apiBase";
 import "./Promotion.css";
 
 const LIMIT = 8;
@@ -17,7 +18,6 @@ export default function PromotionList() {
   const [loading, setLoading] = useState(true);
 
   const totalPages = Math.ceil(count / LIMIT);
-  const API = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
   const usedPromoIds = new Set(
     user?.promotionUsages?.map((p) => p.promotionId)
@@ -31,7 +31,7 @@ export default function PromotionList() {
 
       try {
         const res = await fetch(
-          `${API}/promotions?page=${page}&limit=${LIMIT}`,
+          apiUrl(`/promotions?page=${page}&limit=${LIMIT}`),
           {
             headers: { Authorization: `Bearer ${token}` },
           }

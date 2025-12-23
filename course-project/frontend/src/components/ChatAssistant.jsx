@@ -1,8 +1,7 @@
 import React from "react";
 import { FaMicrophone } from "react-icons/fa";
 import { useAuth } from "../contexts/AuthContext";
-
-const API = process.env.REACT_APP_API_URL || "http://localhost:3000";
+import { apiUrl } from "../config/apiBase";
 
 export default function ChatAssistant() {
   const { token } = useAuth();
@@ -87,7 +86,7 @@ export default function ChatAssistant() {
     setMsgs((m) => [...m, { role: "you", text }]);
     setBusy(true);
     try {
-      const r = await fetch(`${API}/ai/chat`, {
+      const r = await fetch(apiUrl("/ai/chat"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -145,7 +144,7 @@ export default function ChatAssistant() {
       return;
     }
     try {
-      const resp = await fetch(`${API}/ai/tts`, {
+      const resp = await fetch(apiUrl("/ai/tts"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

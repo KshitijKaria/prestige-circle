@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
+import { apiUrl } from "../config/apiBase";
 
 const AuthContext = createContext(null);
-const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 // Use sessionStorage so auth is per-tab, not shared across tabs
 const STORAGE = typeof window !== "undefined" ? window.sessionStorage : null;
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
         const expiry = new Date(expiresAt);
         if (now < expiry) {
           try {
-            const response = await fetch(`${API_BASE_URL}/users/me`, {
+            const response = await fetch(apiUrl("/users/me"), {
               headers: {
                 Authorization: `Bearer ${storedToken}`,
                 "Content-Type": "application/json",
@@ -85,7 +85,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (utorid, password) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/tokens`, {
+      const response = await fetch(apiUrl("/auth/tokens"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -107,7 +107,7 @@ export const AuthProvider = ({ children }) => {
       }
       setToken(newToken);
 
-      const userResponse = await fetch(`${API_BASE_URL}/users/me`, {
+      const userResponse = await fetch(apiUrl("/users/me"), {
         headers: {
           Authorization: `Bearer ${newToken}`,
           "Content-Type": "application/json",
@@ -179,7 +179,7 @@ export const AuthProvider = ({ children }) => {
   const refreshUser = async () => {
     if (!token) return;
     try {
-      const response = await fetch(`${API_BASE_URL}/users/me`, {
+      const response = await fetch(apiUrl("/users/me"), {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

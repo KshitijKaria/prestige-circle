@@ -2,9 +2,8 @@
 import React from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { apiUrl } from "../config/apiBase";
 import "./EventsPage.css";
-
-const API = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 export default function EventManage() {
   const { id } = useParams();
@@ -24,7 +23,7 @@ export default function EventManage() {
     setLoading(true);
     setErr("");
 
-    fetch(`${API}/events/${id}`, {
+    fetch(apiUrl(`/events/${id}`), {
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       signal: ctrl.signal,
     })
@@ -138,13 +137,13 @@ export default function EventManage() {
       }
 
       // Try PATCH first, fallback to PUT if the server requires it
-      let r = await fetch(`${API}/events/${id}`, {
+      let r = await fetch(apiUrl(`/events/${id}`), {
         method: "PATCH",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify(payload),
       });
       if (!r.ok && (r.status === 405 || r.status === 404)) {
-        r = await fetch(`${API}/events/${id}`, {
+        r = await fetch(apiUrl(`/events/${id}`), {
           method: "PUT",
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
           body: JSON.stringify(payload),
@@ -158,7 +157,7 @@ export default function EventManage() {
       toast("Event updated.");
 
       // Refresh from server (ensures normalized timestamps etc.)
-      const fresh = await fetch(`${API}/events/${id}`, {
+      const fresh = await fetch(apiUrl(`/events/${id}`), {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       }).then(justJSON);
       setEvent(fresh);
@@ -246,7 +245,7 @@ export default function EventManage() {
 
     // Try a server-side search first; still apply client-side filter.
     try {
-      const r = await fetch(`${API}/users?search=${encodeURIComponent(q)}`, { headers });
+      const r = await fetch(apiUrl(`/users?search=${encodeURIComponent(q)}`), { headers });
       if (r.ok) {
         const data = await r.json();
         return applyFilter(normalize(data));
@@ -255,7 +254,7 @@ export default function EventManage() {
 
     // Fallback: fetch all and filter on the client.
     try {
-      const r = await fetch(`${API}/users`, { headers });
+      const r = await fetch(apiUrl("/users"), { headers });
       if (r.ok) {
         const data = await r.json();
         return applyFilter(normalize(data));
@@ -337,7 +336,7 @@ export default function EventManage() {
     }
 
     try {
-      const r = await fetch(`${API}/events/${id}/organizers`, {
+      const r = await fetch(apiUrl(`/events/${id}/organizers`), {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ utorid: typed }), // spec requires {utorid}
@@ -352,7 +351,7 @@ export default function EventManage() {
       toast("Organizer added.");
       setOrganizerQuery("");
 
-      const fresh = await fetch(`${API}/events/${id}`, {
+      const fresh = await fetch(apiUrl(`/events/${id}`), {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       }).then(justJSON);
       setEvent(fresh);
@@ -367,7 +366,7 @@ export default function EventManage() {
   async function removeOrganizer(uid) {
     if (!canManageOrganizers) return toast("Only managers can remove organizers.");
     try {
-      const r = await fetch(`${API}/events/${id}/organizers/${uid}`, {
+      const r = await fetch(apiUrl(`/events/${id}/organizers/${uid}`), {
         method: "DELETE",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       });
@@ -395,7 +394,7 @@ export default function EventManage() {
     }
 
     try {
-      const r = await fetch(`${API}/events/${id}/guests`, {
+      const r = await fetch(apiUrl(`/events/${id}/guests`), {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ utorid: typed }), // spec requires {utorid}
@@ -410,7 +409,7 @@ export default function EventManage() {
       toast("Guest added.");
       setGuestQuery("");
 
-      const fresh = await fetch(`${API}/events/${id}`, {
+      const fresh = await fetch(apiUrl(`/events/${id}`), {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       }).then(justJSON);
       setEvent(fresh);
@@ -425,7 +424,7 @@ export default function EventManage() {
   async function removeGuest(uid) {
     if (!canRemoveGuests) return toast("Only managers can remove guests.");
     try {
-      const r = await fetch(`${API}/events/${id}/guests/${uid}`, {
+      const r = await fetch(apiUrl(`/events/${id}/guests/${uid}`), {
         method: "DELETE",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       });
@@ -446,7 +445,7 @@ export default function EventManage() {
     const amt = Number(pointsAmt);
     if (!amt || !Number.isFinite(amt)) return toast("Enter recipient and amount.");
     try {
-      const r = await fetch(`${API}/events/${id}/transactions`, {
+      const r = await fetch(apiUrl(`/events/${id}/transactions`), {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ type: "event", utorid: targetUtorid.trim(), amount: amt }),
@@ -478,7 +477,7 @@ export default function EventManage() {
     if (!amt || !Number.isFinite(amt)) return toast("Enter amount.");
     const guestCount = Array.isArray(guests) ? guests.length : 0;
     try {
-      const r = await fetch(`${API}/events/${id}/transactions`, {
+      const r = await fetch(apiUrl(`/events/${id}/transactions`), {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ type: "event", amount: amt }),
@@ -514,7 +513,7 @@ export default function EventManage() {
     const ok = window.confirm("Delete this event? This cannot be undone.");
     if (!ok) return;
     try {
-      const r = await fetch(`${API}/events/${id}`, {
+      const r = await fetch(apiUrl(`/events/${id}`), {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

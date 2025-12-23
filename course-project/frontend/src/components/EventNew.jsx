@@ -2,9 +2,8 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { apiUrl } from "../config/apiBase";
 import "./EventsPage.css";
-
-const API = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 export default function EventNew() {
   const { token, user, currentInterface } = useAuth();
@@ -105,7 +104,7 @@ export default function EventNew() {
         points: Number(form.points),
         published: !!form.published,
       };
-      const r = await fetch(`${API}/events`, {
+      const r = await fetch(apiUrl("/events"), {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify(payload),
@@ -116,7 +115,7 @@ export default function EventNew() {
       toast("Event created.");
       if (newId && form.published) {
         try {
-          const pub = await fetch(`${API}/events/${newId}`, {
+          const pub = await fetch(apiUrl(`/events/${newId}`), {
             method: "PATCH",
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
             body: JSON.stringify({ published: true }),

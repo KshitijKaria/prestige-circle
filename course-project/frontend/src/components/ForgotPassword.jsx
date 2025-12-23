@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { apiUrl } from "../config/apiBase";
 import "./Auth.css";
-
-const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 function ForgotPassword() {
   const [utorid, setUtorid] = useState("");
@@ -27,7 +26,7 @@ function ForgotPassword() {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/resets`, {
+      const response = await fetch(apiUrl("/auth/resets"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

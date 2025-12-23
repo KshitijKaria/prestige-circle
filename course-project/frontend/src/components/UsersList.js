@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { apiUrl } from "../config/apiBase";
 import UserManagementModal from "./UserManagementModal";
 import "./UsersList.css";
-
-const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 function UsersList() {
   const { token, currentInterface } = useAuth();
@@ -43,7 +42,7 @@ function UsersList() {
       }
 
       try {
-        const response = await fetch(`${API_BASE_URL}/users?${params}`, {
+        const response = await fetch(apiUrl(`/users?${params}`), {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",

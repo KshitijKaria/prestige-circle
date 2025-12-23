@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { apiUrl } from "../config/apiBase";
 import "./Promotion.css";
-
-const API = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 export default function PromotionDetails() {
   const { id } = useParams();
@@ -18,7 +17,7 @@ export default function PromotionDetails() {
 
   useEffect(() => {
     async function load() {
-      const res = await fetch(`${API}/promotions/${id}`, {
+      const res = await fetch(apiUrl(`/promotions/${id}`), {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -35,7 +34,7 @@ export default function PromotionDetails() {
     if (!window.confirm("Delete this promotion? This cannot be undone."))
       return;
 
-    const res = await fetch(`${API}/promotions/${id}`, {
+    const res = await fetch(apiUrl(`/promotions/${id}`), {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });

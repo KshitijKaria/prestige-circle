@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import "./Profile.css";
 import { useNavigate } from "react-router-dom";
-
-const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
+import { apiUrl } from "../config/apiBase";
 
 function Profile() {
   const { user, setUser } = useAuth();
@@ -29,7 +28,7 @@ function Profile() {
   // helper: refetch user data to stay up to date when user info is updated
   const fetchUpdatedUser = async () => {
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:3000/users/me", {
+    const res = await fetch(apiUrl("/users/me"), {
       headers: { Authorization: `Bearer ${token}` },
     });
     const updatedUser = await res.json();
@@ -74,7 +73,7 @@ function Profile() {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`${API_BASE_URL}/users/me`, {
+      const response = await fetch(apiUrl("/users/me"), {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,

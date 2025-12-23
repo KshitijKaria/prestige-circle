@@ -3,9 +3,8 @@ import React from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { FiClock, FiMapPin, FiUsers, FiCheck } from "react-icons/fi";
 import { useAuth } from "../contexts/AuthContext";
+import { apiUrl } from "../config/apiBase";
 import "./EventsPage.css";
-
-const API = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 export default function EventsPage() {
   const { token, user, currentInterface } = useAuth();
@@ -34,7 +33,7 @@ export default function EventsPage() {
         toCheck.map(async (ev) => {
           try {
             // Try a membership probe: GET /events/:id/guests/me
-            const r = await fetch(`${API}/events/${ev.id}/guests/me`, {
+            const r = await fetch(apiUrl(`/events/${ev.id}/guests/me`), {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
@@ -76,7 +75,7 @@ export default function EventsPage() {
     await Promise.all(
       toLoad.map(async (ev) => {
         try {
-          const r = await fetch(`${API}/events/${ev.id}`, {
+          const r = await fetch(apiUrl(`/events/${ev.id}`), {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -112,7 +111,11 @@ export default function EventsPage() {
     setErr("");
 
     // showFull=true ensures full events remain visible instead of being filtered out by the backend
-    fetch(`${API}/events?page=${page}&limit=${limit}&showFull=true&includeMe=true${canManage ? "" : "&published=true"}`, {
+    fetch(
+      apiUrl(
+        `/events?page=${page}&limit=${limit}&showFull=true&includeMe=true${canManage ? "" : "&published=true"}`
+      ),
+      {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -215,7 +218,7 @@ export default function EventsPage() {
 
   async function rsvp(eventId) {
     try {
-      const r = await fetch(`${API}/events/${eventId}/guests/me`, {
+      const r = await fetch(apiUrl(`/events/${eventId}/guests/me`), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -250,7 +253,7 @@ export default function EventsPage() {
 
   async function unrsvp(eventId) {
     try {
-      await fetch(`${API}/events/${eventId}/guests/me`, {
+      await fetch(apiUrl(`/events/${eventId}/guests/me`), {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -272,7 +275,9 @@ export default function EventsPage() {
   async function revalidateQuiet() {
     try {
       const r = await fetch(
-        `${API}/events?page=${page}&limit=${limit}&showFull=true&includeMe=true${canManage ? "" : "&published=true"}`,
+        apiUrl(
+          `/events?page=${page}&limit=${limit}&showFull=true&includeMe=true${canManage ? "" : "&published=true"}`
+        ),
         {
           headers: {
             "Content-Type": "application/json",

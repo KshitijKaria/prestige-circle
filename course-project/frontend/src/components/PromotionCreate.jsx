@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { apiUrl } from "../config/apiBase";
 import "./Promotion.css";
 import "./Profile.css";
-
-const API = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 export default function PromotionCreate() {
   const { token } = useAuth();
@@ -68,7 +67,7 @@ export default function PromotionCreate() {
       points: form.points || undefined,
     };
 
-    const res = await fetch(`${API}/promotions`, {
+    const res = await fetch(apiUrl("/promotions"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

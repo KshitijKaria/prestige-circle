@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { apiUrl } from "../config/apiBase";
 import "./Auth.css";
-
-const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 function ResetPassword() {
   const [resetToken, setResetToken] = useState("");
@@ -40,16 +39,13 @@ function ResetPassword() {
     }
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/auth/resets/${resetToken}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ utorid, password }),
-        }
-      );
+      const response = await fetch(apiUrl(`/auth/resets/${resetToken}`), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ utorid, password }),
+      });
 
       const data = await response.json();
 

@@ -3,8 +3,7 @@ import "./Transaction.css";
 import "./EventsPage.css"; // reuse pc-* styles
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-
-const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
+import { apiUrl } from "../config/apiBase";
 
 /**
  * TransactionRegular
@@ -69,15 +68,12 @@ export default function TransactionRegular() {
         setTxError(null);
 
         const query = buildTxQuery();
-        const res = await fetch(
-          `${API_BASE_URL}/users/me/transactions?${query}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const res = await fetch(apiUrl(`/users/me/transactions?${query}`), {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
         const data = await res.json();
         if (!res.ok)
           throw new Error(data.error || "Failed to load transactions");
@@ -118,7 +114,7 @@ export default function TransactionRegular() {
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/users/${idNum}/transactions`, {
+      const res = await fetch(apiUrl(`/users/${idNum}/transactions`), {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -162,7 +158,7 @@ export default function TransactionRegular() {
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/users/me/transactions`, {
+      const res = await fetch(apiUrl("/users/me/transactions"), {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

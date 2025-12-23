@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
+import { apiUrl } from "../config/apiBase";
 import "./Promotion.css";
-
-const API = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 function toLocalInputValue(dateString) {
   const d = new Date(dateString);
@@ -27,7 +26,7 @@ export default function PromotionEdit() {
 
   useEffect(() => {
     async function load() {
-      const r = await fetch(`${API}/promotions/${id}`, {
+      const r = await fetch(apiUrl(`/promotions/${id}`), {
         headers: { Authorization: `Bearer ${token}` },
       });
       const d = await r.json();
@@ -56,7 +55,7 @@ export default function PromotionEdit() {
       points: promo.points,
     };
 
-    const r = await fetch(`${API}/promotions/${id}`, {
+    const r = await fetch(apiUrl(`/promotions/${id}`), {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,

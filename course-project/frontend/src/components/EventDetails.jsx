@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import { useParams, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { apiUrl } from "../config/apiBase";
 import "leaflet/dist/leaflet.css";
 import "./EventsPage.css";
 
@@ -17,7 +18,6 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
-const API = process.env.REACT_APP_API_URL || "http://localhost:3000";
 const MAPTILER_KEY = process.env.REACT_APP_MAPTILER_KEY || "";
 const DEFAULT_CENTER = [43.6532, -79.3832]; // Toronto fallback
 
@@ -43,7 +43,7 @@ export default function EventDetails() {
     const ctrl = new AbortController();
     setLoading(true);
     setErr("");
-    fetch(`${API}/events/${id}`, {
+    fetch(apiUrl(`/events/${id}`), {
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       signal: ctrl.signal,
     })

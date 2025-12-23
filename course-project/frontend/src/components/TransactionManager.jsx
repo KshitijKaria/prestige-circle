@@ -3,8 +3,7 @@ import "./Transaction.css";
 import "./EventsPage.css"; // reuse pc-* styles for tabs/filter row
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-
-const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
+import { apiUrl } from "../config/apiBase";
 
 /**
  * TransactionManager
@@ -68,7 +67,7 @@ export default function TransactionManager() {
         setLoading(true);
         setError(null);
         const query = buildQuery();
-        const res = await fetch(`${API_BASE_URL}/transactions?${query}`, {
+        const res = await fetch(apiUrl(`/transactions?${query}`), {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -143,7 +142,7 @@ export default function TransactionManager() {
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/transactions`, {
+      const res = await fetch(apiUrl("/transactions"), {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

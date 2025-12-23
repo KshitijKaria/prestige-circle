@@ -1,8 +1,7 @@
 import "./Transaction.css";
 import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-
-const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
+import { apiUrl } from "../config/apiBase";
 
 /**
  * TransactionCashier
@@ -64,7 +63,7 @@ export default function TransactionCashier({ mode = "both" }) {
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/transactions`, {
+      const res = await fetch(apiUrl("/transactions"), {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -110,7 +109,7 @@ export default function TransactionCashier({ mode = "both" }) {
 
     try {
       const res = await fetch(
-        `${API_BASE_URL}/transactions/${idNum}/processed`,
+        apiUrl(`/transactions/${idNum}/processed`),
         {
           method: "PATCH",
           headers: {

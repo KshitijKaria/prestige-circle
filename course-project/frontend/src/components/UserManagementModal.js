@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import { apiUrl } from "../config/apiBase";
 import "./UserManagementModal.css";
-
-const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 function UserManagementModal({ user, isOpen, onClose, onUserUpdated }) {
   const [currentUserData, setCurrentUserData] = useState(user);
@@ -23,7 +22,7 @@ function UserManagementModal({ user, isOpen, onClose, onUserUpdated }) {
     setError("");
 
     try {
-      const response = await fetch(`${API_BASE_URL}/users/${user.id}`, {
+      const response = await fetch(apiUrl(`/users/${user.id}`), {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
