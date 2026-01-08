@@ -159,6 +159,18 @@
   text-decoration: underline;
 }
 
+.login-notes {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.login-note {
+  color: #cbd5e1;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 6px 0;
+}
+
 .btn-primary:disabled {
   background-color: #888;
   cursor: not-allowed;

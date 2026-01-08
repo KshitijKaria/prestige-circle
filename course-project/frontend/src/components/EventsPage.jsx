@@ -111,9 +111,14 @@ export default function EventsPage() {
     setErr("");
 
     // showFull=true ensures full events remain visible instead of being filtered out by the backend
+    const timeFilterParam =
+      filter === "past" ? "&ended=true" : filter === "all" ? "&ended=false" : "";
+
     fetch(
       apiUrl(
-        `/events?page=${page}&limit=${limit}&showFull=true&includeMe=true${canManage ? "" : "&published=true"}`
+        `/events?page=${page}&limit=${limit}&showFull=true&includeMe=true${timeFilterParam}${
+          canManage ? "" : "&published=true"
+        }`
       ),
       {
       headers: {
@@ -182,7 +187,7 @@ export default function EventsPage() {
       .finally(() => setLoading(false));
 
     return () => ctrl.abort();
-  }, [token, page, limit, canManage, markMyRsvps, backfillDescriptions]);
+  }, [token, page, limit, canManage, filter, markMyRsvps, backfillDescriptions]);
 
   const visible = React.useMemo(() => {
     const now = new Date();
@@ -274,9 +279,14 @@ export default function EventsPage() {
 
   async function revalidateQuiet() {
     try {
+      const timeFilterParam =
+        filter === "past" ? "&ended=true" : filter === "all" ? "&ended=false" : "";
+
       const r = await fetch(
         apiUrl(
-          `/events?page=${page}&limit=${limit}&showFull=true&includeMe=true${canManage ? "" : "&published=true"}`
+          `/events?page=${page}&limit=${limit}&showFull=true&includeMe=true${timeFilterParam}${
+            canManage ? "" : "&published=true"
+          }`
         ),
         {
           headers: {
@@ -373,7 +383,10 @@ export default function EventsPage() {
             <button
               key={f.key}
               className={`pc-filter ${filter === f.key ? "active" : ""}`}
-              onClick={() => setFilter(f.key)}
+              onClick={() => {
+                setFilter(f.key);
+                setParams({ page: "1", limit: String(limit) });
+              }}
             >
               {f.label}
             </button>

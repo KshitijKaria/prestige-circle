@@ -82,6 +82,17 @@ function Login() {
             <Link to="/forgot-password">Forgot your password?</Link>
           </p>
         </div>
+
+        <div className="login-notes">
+          <p className="login-note">
+            Demo usernames: superadmin/manager1/cashier1/student1. Password:
+            password123.
+          </p>
+          <p className="login-note">
+            Please allow up to 50 seconds for first-time login while the Render
+            backend wakes up.
+          </p>
+        </div>
       </div>
     </div>
   );
