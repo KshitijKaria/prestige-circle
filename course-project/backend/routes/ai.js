@@ -132,8 +132,16 @@ function formatEventsList(events) {
 }
 
 async function synthesizeReply(text) {
-  if (!ELEVEN_KEY || !text) return null;
+  if (!ELEVEN_KEY) {
+    console.error("TTS skipped: ELEVENLABS_API_KEY not set");
+    return null;
+  }
+  if (!text) {
+    console.error("TTS skipped: empty text");
+    return null;
+  }
   try {
+    console.log("TTS: calling ElevenLabs API...");
     const resp = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(ELEVEN_VOICE)}`,
       {
@@ -146,11 +154,16 @@ async function synthesizeReply(text) {
         body: JSON.stringify({ text, model_id: ELEVEN_MODEL }),
       }
     );
-    if (!resp.ok) return null;
+    if (!resp.ok) {
+      const errText = await resp.text();
+      console.error(`TTS error: status=${resp.status}, body=${errText}`);
+      return null;
+    }
     const buffer = Buffer.from(await resp.arrayBuffer());
+    console.log(`TTS success: ${buffer.length} bytes`);
     return buffer.toString("base64");
   } catch (e) {
-    console.error("tts error", e);
+    console.error("TTS exception:", e);
     return null;
   }
 }
