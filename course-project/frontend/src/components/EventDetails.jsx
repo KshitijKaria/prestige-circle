@@ -265,7 +265,6 @@ function fmtWhen(e) {
 }
 
 /* tiny toast (unchanged) */
-let toastId = 0;
 const listeners = new Set();
 function Toasts() {
   const [toasts, setToasts] = React.useState([]);

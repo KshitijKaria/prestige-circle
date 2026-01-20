@@ -617,16 +617,6 @@ function isFull(e) {
   return used >= e.capacity && e.capacity >= 0;
 }
 
-function spotsLeft(e) {
-  if (typeof e?.capacity !== "number") return null;
-  const used =
-    typeof e?.guestsCount === "number"
-      ? e.guestsCount
-      : Array.isArray(e?.guests)
-        ? e.guests.length
-        : 0;
-  return Math.max(0, e.capacity - used);
-}
 
 function dateMonth(e) {
   const d = e?.startTime ? new Date(e.startTime) : e?.endTime ? new Date(e.endTime) : new Date();
