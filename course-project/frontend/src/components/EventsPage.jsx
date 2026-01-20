@@ -628,33 +628,6 @@ function spotsLeft(e) {
   return Math.max(0, e.capacity - used);
 }
 
-function _capacityText(e) {
-  if (typeof e?.capacity !== "number") return "";
-  const full = isFull(e);
-  const left = spotsLeft(e);
-  return full ? "Capacity reached" : `${left} spots left`;
-}
-
-function _fmtWhen(e) {
-  if (e.when) return e.when;
-  const s = e.startTime ? new Date(e.startTime) : null;
-  const t = e.endTime ? new Date(e.endTime) : null;
-  const optsDate = { year: "numeric", month: "short", day: "numeric" };
-  const optsTime = { hour: "numeric", minute: "2-digit" };
-  if (s && t) {
-    return `${s.toLocaleDateString(undefined, optsDate)}, ${s.toLocaleTimeString(
-      undefined,
-      optsTime
-    )} – ${t.toLocaleTimeString(undefined, optsTime)}`;
-  }
-  if (s)
-    return `${s.toLocaleDateString(undefined, optsDate)}, ${s.toLocaleTimeString(
-      undefined,
-      optsTime
-    )}`;
-  return "";
-}
-
 function dateMonth(e) {
   const d = e?.startTime ? new Date(e.startTime) : e?.endTime ? new Date(e.endTime) : new Date();
   return d.toLocaleString(undefined, { month: "short" }).toUpperCase();

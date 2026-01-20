@@ -859,24 +859,6 @@ function normalizeGuests(list) {
 }
 function titleCase(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 function isOrganizer(orgs, meId) { return Array.isArray(orgs) && orgs.some((o) => (o.id === meId) || (o.userId === meId)); }
-function _capacityText(e) {
-  if (!e || typeof e.capacity !== "number") return "";
-  const used =
-    typeof e.guestsCount === "number" ? e.guestsCount :
-      Array.isArray(e.guests) ? e.guests.length : undefined;
-  if (typeof used === "number") return `${used}/${e.capacity} spots`;
-  return `Capacity: ${e.capacity}`;
-}
-function _fmtWhen(e) {
-  if (e?.when) return e.when;
-  const s = e?.startTime ? new Date(e.startTime) : null;
-  const t = e?.endTime ? new Date(e.endTime) : null;
-  const d = { year: "numeric", month: "short", day: "numeric" };
-  const tm = { hour: "numeric", minute: "2-digit" };
-  if (s && t) return `${s.toLocaleDateString(undefined, d)}, ${s.toLocaleTimeString(undefined, tm)} – ${t.toLocaleTimeString(undefined, tm)}`;
-  if (s) return `${s.toLocaleDateString(undefined, d)}, ${s.toLocaleTimeString(undefined, tm)}`;
-  return "";
-}
 function fmtDateTime(x) {
   try { const d = new Date(x); return d.toLocaleString(); } catch { return ""; }
 }

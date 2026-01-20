@@ -267,11 +267,6 @@ function fmtWhen(e) {
 /* tiny toast (unchanged) */
 let toastId = 0;
 const listeners = new Set();
-function _pushToast(msg) {
-  const id = ++toastId;
-  listeners.forEach((fn) => fn({ id, text: msg }));
-  setTimeout(() => listeners.forEach((fn) => fn({ id, remove: true })), 2500);
-}
 function Toasts() {
   const [toasts, setToasts] = React.useState([]);
   React.useEffect(() => {
