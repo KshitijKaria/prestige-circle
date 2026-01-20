@@ -22,7 +22,6 @@ export default function PromotionDetails() {
 
       const json = await res.json();
       if (res.ok) setPromo(json);
-      else setError(json.error);
 
       setLoading(false);
     }
@@ -40,9 +39,6 @@ export default function PromotionDetails() {
 
     if (res.ok) {
       navigate("/promotions");
-    } else {
-      const err = await res.json();
-      setError(err.error);
     }
   }
 
