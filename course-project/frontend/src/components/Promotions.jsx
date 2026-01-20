@@ -70,7 +70,7 @@ export default function PromotionList() {
     if (page > totalPages && totalPages > 0) {
       setPage(totalPages);
     }
-  }, [totalPages]);
+  }, [totalPages, page]);
 
   return (
     <div className="promotion-list-container">
