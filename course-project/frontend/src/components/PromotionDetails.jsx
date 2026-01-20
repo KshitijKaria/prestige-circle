@@ -6,7 +6,7 @@ import "./Promotion.css";
 
 export default function PromotionDetails() {
   const { id } = useParams();
-  const [error, setError] = useState("");
+  const [_error, setError] = useState("");
   const navigate = useNavigate();
   const { token, currentInterface } = useAuth();
 

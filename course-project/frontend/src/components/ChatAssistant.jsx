@@ -121,7 +121,6 @@ export default function ChatAssistant() {
 
   function openPanel() { setOpen(true); }
   function closePanel() { setOpen(false); }
-  function togglePanel() { setOpen((o) => !o); }
 
   function startVoice() {
     if (!recognitionRef.current || busy) return;

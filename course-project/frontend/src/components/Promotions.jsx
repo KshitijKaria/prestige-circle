@@ -19,10 +19,6 @@ export default function PromotionList() {
 
   const totalPages = Math.ceil(count / LIMIT);
 
-  const usedPromoIds = new Set(
-    user?.promotionUsages?.map((p) => p.promotionId)
-  );
-
   useEffect(() => {
     async function fetchPromotions() {
       setLoading(true);
@@ -40,7 +36,6 @@ export default function PromotionList() {
         const data = await res.json();
 
         if (res.ok) {
-          const now = new Date();
           const usedPromoIds = new Set(
             (user.promotionUsages || []).map((u) => u.promotionId)
           );

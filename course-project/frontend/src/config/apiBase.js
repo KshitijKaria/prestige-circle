@@ -1,5 +1,3 @@
-"use strict";
-
 // Vercel env var:
 // REACT_APP_API_BASE_URL=https://<backend>.vercel.app
 const rawBase = process.env.REACT_APP_API_BASE_URL || "http://localhost:3000";

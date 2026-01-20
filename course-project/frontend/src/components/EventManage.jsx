@@ -96,9 +96,9 @@ export default function EventManage() {
       const trim = (v) => (typeof v === "string" ? v.trim() : v);
 
       // Text fields: include only if non-empty
-      if (trim(form.name))        payload.name = trim(form.name);
+      if (trim(form.name)) payload.name = trim(form.name);
       if (trim(form.description)) payload.description = trim(form.description);
-      if (trim(form.location))    payload.location = trim(form.location);
+      if (trim(form.location)) payload.location = trim(form.location);
 
       // Time fields: include only if provided, and only as ISO strings
       if (form.startTime) {
@@ -190,12 +190,12 @@ export default function EventManage() {
       const list = Array.isArray(data?.items)
         ? data.items
         : Array.isArray(data?.results)
-        ? data.results
-        : Array.isArray(data?.users)
-        ? data.users
-        : Array.isArray(data)
-        ? data
-        : [];
+          ? data.results
+          : Array.isArray(data?.users)
+            ? data.users
+            : Array.isArray(data)
+              ? data
+              : [];
       return list.map((u) => ({
         id: u.id ?? u.userId ?? u._id ?? u.email ?? u.utorid,
         utorid: u.utorid ?? u.username ?? u.email ?? "",
@@ -250,7 +250,7 @@ export default function EventManage() {
         const data = await r.json();
         return applyFilter(normalize(data));
       }
-    } catch {}
+    } catch { }
 
     // Fallback: fetch all and filter on the client.
     try {
@@ -259,7 +259,7 @@ export default function EventManage() {
         const data = await r.json();
         return applyFilter(normalize(data));
       }
-    } catch {}
+    } catch { }
 
     return [];
   }, [token]);
@@ -537,8 +537,8 @@ export default function EventManage() {
           <span className={`pc-badge ${event?.published ? "ok" : ""}`}>{event?.published ? "published" : "unpublished"}</span>
         </div>
         <nav className="u-flex u-gap-8">
-          {["overview","organizers","guests","points"].map(k => (
-            <button key={k} className={`pc-btn ${tab===k ? "" : "secondary"}`} onClick={()=> setTab(k)}>{titleCase(k)}</button>
+          {["overview", "organizers", "guests", "points"].map(k => (
+            <button key={k} className={`pc-btn ${tab === k ? "" : "secondary"}`} onClick={() => setTab(k)}>{titleCase(k)}</button>
           ))}
         </nav>
       </div>
@@ -560,23 +560,23 @@ export default function EventManage() {
               <div className="pc-grid-240">
                 <label className="pc-field">
                   <div className="pc-label">Name</div>
-                  <input className="pc-input" value={form.name} onChange={(e)=> setForm({...form, name: e.target.value})} />
+                  <input className="pc-input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
                 </label>
                 <label className="pc-field">
                   <div className="pc-label">Location</div>
-                  <input className="pc-input" value={form.location} onChange={(e)=> setForm({...form, location: e.target.value})} />
+                  <input className="pc-input" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
                 </label>
                 <label className="pc-field">
                   <div className="pc-label">Start</div>
-                  <input type="datetime-local" className="pc-input" value={form.startTime} onChange={(e)=> setForm({...form, startTime: e.target.value})} />
+                  <input type="datetime-local" className="pc-input" value={form.startTime} onChange={(e) => setForm({ ...form, startTime: e.target.value })} />
                 </label>
                 <label className="pc-field">
                   <div className="pc-label">End</div>
-                  <input type="datetime-local" className="pc-input" value={form.endTime} onChange={(e)=> setForm({...form, endTime: e.target.value})} />
+                  <input type="datetime-local" className="pc-input" value={form.endTime} onChange={(e) => setForm({ ...form, endTime: e.target.value })} />
                 </label>
                 <label className="pc-field">
                   <div className="pc-label">Capacity</div>
-                  <input type="number" min="0" className="pc-input" value={form.capacity} onChange={(e)=> setForm({...form, capacity: e.target.value})} />
+                  <input type="number" min="0" className="pc-input" value={form.capacity} onChange={(e) => setForm({ ...form, capacity: e.target.value })} />
                 </label>
                 {canEditPoints && (
                   <label className="pc-field">
@@ -586,7 +586,7 @@ export default function EventManage() {
                       min="0"
                       className="pc-input"
                       value={form.points}
-                      onChange={(e)=> setForm({ ...form, points: e.target.value })}
+                      onChange={(e) => setForm({ ...form, points: e.target.value })}
                       placeholder="e.g. 500"
                     />
                   </label>
@@ -598,8 +598,8 @@ export default function EventManage() {
                       event?.published
                         ? "Once published, it cannot be unpublished."
                         : canPublish
-                        ? "Managers can publish this event."
-                        : "Only managers can publish."
+                          ? "Managers can publish this event."
+                          : "Only managers can publish."
                     }
                   >
                     <input
@@ -623,7 +623,7 @@ export default function EventManage() {
               </div>
               <label className="pc-field u-mt-12">
                 <div className="pc-label">Description</div>
-                <textarea rows={4} className="pc-input" value={form.description} onChange={(e)=> setForm({...form, description: e.target.value})} />
+                <textarea rows={4} className="pc-input" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
               </label>
               <div className="pc-actions u-mt-12">
                 <button className="pc-btn" onClick={saveOverview}>Save Changes</button>
@@ -651,9 +651,9 @@ export default function EventManage() {
                       placeholder="Add organizer by UTORid"
                       aria-label="Add organizer by UTORid"
                       value={organizerQuery}
-                      onChange={(e)=> setOrganizerQuery(e.target.value)}
-                      onFocus={()=> setOrgDrop(orgSuggest.length > 0)}
-                      onKeyDown={(e)=> {
+                      onChange={(e) => setOrganizerQuery(e.target.value)}
+                      onFocus={() => setOrgDrop(orgSuggest.length > 0)}
+                      onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           if (organizerQuery.trim() === '' && orgSuggest[0]?.utorid) {
                             setOrganizerQuery(orgSuggest[0].utorid);
@@ -689,11 +689,11 @@ export default function EventManage() {
                 <div className="pc-empty">No organizers yet.</div>
               ) : (
                 <ul className="pc-list">
-                  {organizers.map((o)=> (
+                  {organizers.map((o) => (
                     <li key={o.id} className="pc-li">
-                      <span>{o.name} <span style={{ color:"#94a3b8" }}>({o.utorid || o.email})</span></span>
+                      <span>{o.name} <span style={{ color: "#94a3b8" }}>({o.utorid || o.email})</span></span>
                       {canManageOrganizers && (
-                        <button className="pc-btn secondary" onClick={()=> removeOrganizer(o.id)}>Remove</button>
+                        <button className="pc-btn secondary" onClick={() => removeOrganizer(o.id)}>Remove</button>
                       )}
                     </li>
                   ))}
@@ -712,9 +712,9 @@ export default function EventManage() {
                       placeholder="Add guest by UTORid"
                       aria-label="Add guest by UTORid"
                       value={guestQuery}
-                      onChange={(e)=> setGuestQuery(e.target.value)}
-                      onFocus={()=> setGuestDrop(guestSuggest.length > 0)}
-                      onKeyDown={(e)=> {
+                      onChange={(e) => setGuestQuery(e.target.value)}
+                      onFocus={() => setGuestDrop(guestSuggest.length > 0)}
+                      onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           if (guestQuery.trim() === '' && guestSuggest[0]?.utorid) {
                             setGuestQuery(guestSuggest[0].utorid);
@@ -750,7 +750,7 @@ export default function EventManage() {
                 <div className="pc-empty">No guests yet.</div>
               ) : (
                 <div className="pc-grid">
-                  {guests.map((g)=> (
+                  {guests.map((g) => (
                     <div key={g.userId} className="pc-card pc-event">
                       <div className="pc-head">
                         <h4 className="pc-name">{g.name || g.utorid || g.email || g.userId}</h4>
@@ -761,7 +761,7 @@ export default function EventManage() {
                       </div>
                       <div className="pc-actions">
                         {canRemoveGuests && (
-                          <button className="pc-btn secondary" onClick={()=> removeGuest(g.userId)}>Remove</button>
+                          <button className="pc-btn secondary" onClick={() => removeGuest(g.userId)}>Remove</button>
                         )}
                       </div>
                     </div>
@@ -794,7 +794,7 @@ export default function EventManage() {
                 </label>
                 <label className="pc-field">
                   <div className="pc-label">Recipient (UTORid)</div>
-                  <input className="pc-input" placeholder="For single award" value={targetUtorid} onChange={(e)=> setTargetUtorid(e.target.value)} />
+                  <input className="pc-input" placeholder="For single award" value={targetUtorid} onChange={(e) => setTargetUtorid(e.target.value)} />
                 </label>
               </div>
               <div className="pc-actions u-mt-12">
@@ -827,18 +827,18 @@ function friendlyError(message) {
     const parsed = JSON.parse(message);
     if (parsed?.error) return String(parsed.error);
     if (parsed?.message) return String(parsed.message);
-  } catch {}
+  } catch { }
   if (/insufficient/i.test(message) && /points/i.test(message)) return "Out of budget for this event.";
-   if (/capacity\s+less\s+than\s+confirmed/i.test(message)) return "Cannot reduce capacity below confirmed guests.";
-   if (/capacity/i.test(message) && /invalid/i.test(message)) return "Invalid capacity.";
-   if (/start\s*time/i.test(message) && /past/i.test(message)) return "Start time cannot be in the past.";
-   if (/end\s*time/i.test(message) && /past/i.test(message)) return "End time cannot be in the past.";
-   if (/end\s*time/i.test(message) && /after\s+start/i.test(message)) return "End time must be after start time.";
+  if (/capacity\s+less\s+than\s+confirmed/i.test(message)) return "Cannot reduce capacity below confirmed guests.";
+  if (/capacity/i.test(message) && /invalid/i.test(message)) return "Invalid capacity.";
+  if (/start\s*time/i.test(message) && /past/i.test(message)) return "Start time cannot be in the past.";
+  if (/end\s*time/i.test(message) && /past/i.test(message)) return "End time cannot be in the past.";
+  if (/end\s*time/i.test(message) && /after\s+start/i.test(message)) return "End time must be after start time.";
   if (/cannot\s*unpublish|unpublish\s*not\s*allowed/i.test(message)) return "Cannot Unpublish a Published Event";
   if (/401|unauthorized/i.test(message)) return "Please log in again.";
-  if (/403|forbidden/i.test(message))   return "You don’t have permission.";
-  if (/capacity|full/i.test(message))   return "Event is full.";
-  if (/ended|past/i.test(message))      return "This event has already ended.";
+  if (/403|forbidden/i.test(message)) return "You don’t have permission.";
+  if (/capacity|full/i.test(message)) return "Event is full.";
+  if (/ended|past/i.test(message)) return "This event has already ended.";
   return message;
 }
 function normalizeUsers(list) {
@@ -859,15 +859,15 @@ function normalizeGuests(list) {
 }
 function titleCase(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 function isOrganizer(orgs, meId) { return Array.isArray(orgs) && orgs.some((o) => (o.id === meId) || (o.userId === meId)); }
-function capacityText(e) {
+function _capacityText(e) {
   if (!e || typeof e.capacity !== "number") return "";
   const used =
     typeof e.guestsCount === "number" ? e.guestsCount :
-    Array.isArray(e.guests) ? e.guests.length : undefined;
+      Array.isArray(e.guests) ? e.guests.length : undefined;
   if (typeof used === "number") return `${used}/${e.capacity} spots`;
   return `Capacity: ${e.capacity}`;
 }
-function fmtWhen(e) {
+function _fmtWhen(e) {
   if (e?.when) return e.when;
   const s = e?.startTime ? new Date(e.startTime) : null;
   const t = e?.endTime ? new Date(e.endTime) : null;

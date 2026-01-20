@@ -100,7 +100,7 @@ export default function EventsPage() {
               return next;
             })
           );
-        } catch {}
+        } catch { }
       })
     );
   }, [token]);
@@ -116,17 +116,16 @@ export default function EventsPage() {
 
     fetch(
       apiUrl(
-        `/events?page=${page}&limit=${limit}&showFull=true&includeMe=true${timeFilterParam}${
-          canManage ? "" : "&published=true"
+        `/events?page=${page}&limit=${limit}&showFull=true&includeMe=true${timeFilterParam}${canManage ? "" : "&published=true"
         }`
       ),
       {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      signal: ctrl.signal,
-    })
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        signal: ctrl.signal,
+      })
       .then(async (r) => {
         if (!r.ok) throw new Error((await r.text()) || r.statusText);
         return r.json();
@@ -284,8 +283,7 @@ export default function EventsPage() {
 
       const r = await fetch(
         apiUrl(
-          `/events?page=${page}&limit=${limit}&showFull=true&includeMe=true${timeFilterParam}${
-            canManage ? "" : "&published=true"
+          `/events?page=${page}&limit=${limit}&showFull=true&includeMe=true${timeFilterParam}${canManage ? "" : "&published=true"
           }`
         ),
         {
@@ -576,9 +574,9 @@ function friendlyError(message) {
     return "Cannot RSVP to an unpublished event.";
   }
   if (/401|unauthorized/i.test(msg)) return "Please log in again.";
-  if (/403|forbidden/i.test(msg))   return "You don’t have permission.";
-  if (/capacity|full/i.test(msg))   return "Event is full.";
-  if (/ended|past/i.test(msg))      return "This event has already ended.";
+  if (/403|forbidden/i.test(msg)) return "You don’t have permission.";
+  if (/capacity|full/i.test(msg)) return "Event is full.";
+  if (/ended|past/i.test(msg)) return "This event has already ended.";
   if (/already/i.test(msg) && /(guest|rsvp|registered)/i.test(msg)) {
     return "You're already RSVPed — use Un-RSVP.";
   }
@@ -603,8 +601,8 @@ function canRsvp(e) {
     typeof e.guestsCount === "number" && typeof e.capacity === "number"
       ? e.guestsCount >= e.capacity
       : Array.isArray(e.guests) && typeof e.capacity === "number"
-      ? e.guests.length >= e.capacity
-      : false;
+        ? e.guests.length >= e.capacity
+        : false;
   return !ended && !isFull;
 }
 
@@ -614,8 +612,8 @@ function isFull(e) {
     typeof e?.guestsCount === "number"
       ? e.guestsCount
       : Array.isArray(e?.guests)
-      ? e.guests.length
-      : 0;
+        ? e.guests.length
+        : 0;
   return used >= e.capacity && e.capacity >= 0;
 }
 
@@ -625,19 +623,19 @@ function spotsLeft(e) {
     typeof e?.guestsCount === "number"
       ? e.guestsCount
       : Array.isArray(e?.guests)
-      ? e.guests.length
-      : 0;
+        ? e.guests.length
+        : 0;
   return Math.max(0, e.capacity - used);
 }
 
-function capacityText(e) {
+function _capacityText(e) {
   if (typeof e?.capacity !== "number") return "";
   const full = isFull(e);
   const left = spotsLeft(e);
   return full ? "Capacity reached" : `${left} spots left`;
 }
 
-function fmtWhen(e) {
+function _fmtWhen(e) {
   if (e.when) return e.when;
   const s = e.startTime ? new Date(e.startTime) : null;
   const t = e.endTime ? new Date(e.endTime) : null;
@@ -683,8 +681,8 @@ function capacityCount(e) {
     typeof e?.guestsCount === "number"
       ? e.guestsCount
       : Array.isArray(e?.guests)
-      ? e.guests.length
-      : 0;
+        ? e.guests.length
+        : 0;
   return `${used}/${e.capacity}`;
 }
 

@@ -238,8 +238,8 @@ function canRsvp(e) {
     typeof e.guestsCount === "number" && typeof e.capacity === "number"
       ? e.guestsCount >= e.capacity
       : Array.isArray(e.guests) && typeof e.capacity === "number"
-      ? e.guests.length >= e.capacity
-      : false;
+        ? e.guests.length >= e.capacity
+        : false;
   return !ended && !isFull;
 }
 function capacityText(e) {
@@ -248,8 +248,8 @@ function capacityText(e) {
     typeof e.guestsCount === "number"
       ? e.guestsCount
       : Array.isArray(e.guests)
-      ? e.guests.length
-      : undefined;
+        ? e.guests.length
+        : undefined;
   if (typeof used === "number") return `${used}/${e.capacity} spots`;
   return `Capacity: ${e.capacity}`;
 }
@@ -267,7 +267,7 @@ function fmtWhen(e) {
 /* tiny toast (unchanged) */
 let toastId = 0;
 const listeners = new Set();
-function pushToast(msg) {
+function _pushToast(msg) {
   const id = ++toastId;
   listeners.forEach((fn) => fn({ id, text: msg }));
   setTimeout(() => listeners.forEach((fn) => fn({ id, remove: true })), 2500);
