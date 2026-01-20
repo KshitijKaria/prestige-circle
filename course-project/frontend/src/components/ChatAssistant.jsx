@@ -45,13 +45,13 @@ export default function ChatAssistant() {
   React.useEffect(() => {
     try {
       localStorage.setItem("assistantOpen", JSON.stringify(open));
-    } catch {}
+    } catch { }
   }, [open]);
 
   React.useEffect(() => {
     try {
       localStorage.setItem("assistantVoice", JSON.stringify(voiceEnabled));
-    } catch {}
+    } catch { }
   }, [voiceEnabled]);
 
   React.useEffect(() => {
@@ -136,36 +136,25 @@ export default function ChatAssistant() {
 
   async function playVoice(text, providedUrl) {
     if (!voiceEnabled) return;
-    const play = (url) => {
-      try { new Audio(url).play().catch(() => {}); } catch {}
-    };
+
+    // If server provided audio (ElevenLabs worked), use it
     if (providedUrl) {
-      play(providedUrl);
+      try { new Audio(providedUrl).play().catch(() => { }); } catch { }
       return;
     }
-    try {
-      const resp = await fetch(apiUrl("/ai/tts"), {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ text }),
-      });
-      const data = await resp.json();
-      const url = data?.audioBase64 ? `data:audio/mpeg;base64,${data.audioBase64}` : null;
-      if (url) {
-        setMsgs((prev) => {
-          const copy = [...prev];
-          const idx = copy.length - 1;
-          if (idx >= 0 && copy[idx].role === "ai" && copy[idx].text === text) {
-            copy[idx] = { ...copy[idx], audioUrl: url };
-          }
-          return copy;
-        });
-        play(url);
-      }
-    } catch {}
+
+    // Fallback: use browser's Web Speech API (free, works everywhere)
+    if (window.speechSynthesis) {
+      try {
+        // Cancel any ongoing speech
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = speechLang;
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+        window.speechSynthesis.speak(utterance);
+      } catch { }
+    }
   }
 
   return (
@@ -289,7 +278,7 @@ export default function ChatAssistant() {
                     setSpeechLang(lang);
                     try {
                       localStorage.setItem("assistantLang", lang);
-                    } catch {}
+                    } catch { }
                   }}
                   style={{
                     background: "transparent",
